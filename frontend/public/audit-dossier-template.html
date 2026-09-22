@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STATUTORY AUDIT DOSSIER — MOSPI/VIG/MPLADS/2026/CR-0842</title>
+
+  <!-- Google Fonts for Print / Document -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Merriweather:wght@400;700;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root {
+      --bg-page: #f8fafc;
+      --text-dark: #0f172a;
+      --text-muted: #475569;
+      --text-light: #64748b;
+      --border-dark: #cbd5e1;
+      --border-subtle: #e2e8f0;
+      --accent-red: #b91c1c;
+      --accent-red-bg: #fef2f2;
+      --accent-red-border: #fca5a5;
+      --accent-blue: #1e3a8a;
+      --accent-blue-bg: #eff6ff;
+      --accent-amber: #b45309;
+      --accent-amber-bg: #fffbeb;
+      --accent-emerald: #047857;
+      --accent-emerald-bg: #ecfdf5;
+      --font-serif: 'Merriweather', Georgia, serif;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'Fira Code', Consolas, Monaco, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: #0b0f19;
+      font-family: var(--font-sans);
+      color: var(--text-dark);
+      padding: 30px 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Top Action Bar */
+    .action-bar {
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      background: #1e293b;
+      padding: 12px 20px;
+      border-radius: 8px;
+      border: 1px solid #334155;
+      color: white;
+    }
+
+    .btn-print {
+      background: linear-gradient(135deg, #6366f1, #4f46e5);
+      color: white;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .btn-print:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4); }
+
+    .btn-back {
+      background: rgba(255, 255, 255, 0.08);
+      color: #cbd5e1;
+      border: 1px solid #475569;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-back:hover { background: rgba(255, 255, 255, 0.15); color: white; }
+
+    /* Paper Page Container (Standard A4 Simulation) */
+    .document-page {
+      background: #ffffff;
+      width: 100%;
+      max-width: 900px;
+      min-height: 1150px;
+      padding: 40px 50px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+      border-radius: 4px;
+      position: relative;
+    }
+
+    /* Government Emblems and Headers */
+    .gov-header {
+      text-align: center;
+      border-bottom: 2px solid #0f172a;
+      padding-bottom: 15px;
+      margin-bottom: 20px;
+    }
+    .emblem-text {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #475569;
+      margin-bottom: 4px;
+    }
+    .ministry-title {
+      font-family: var(--font-serif);
+      font-size: 18px;
+      font-weight: 900;
+      color: #0f172a;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .division-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #334155;
+      margin-top: 3px;
+    }
+
+    /* Classification & Priority Banner */
+    .security-banner {
+      background: #0f172a;
+      color: #ffffff;
+      padding: 6px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-radius: 3px;
+    }
+
+    /* Metadata Block */
+    .meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 24px;
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      padding: 14px 18px;
+      border-radius: 4px;
+      font-size: 11.5px;
+      margin-bottom: 20px;
+    }
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 2px 0;
+      border-bottom: 1px dashed #e2e8f0;
+    }
+    .meta-row:last-child { border-bottom: none; }
+    .meta-label { color: #64748b; font-weight: 600; }
+    .meta-val { font-weight: 700; color: #0f172a; font-family: var(--font-mono); }
+
+    /* Section Titles */
+    .doc-section-title {
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #0f172a;
+      border-left: 4px solid #1e3a8a;
+      padding-left: 10px;
+      margin: 22px 0 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .section-badge {
+      font-size: 9.5px;
+      font-family: var(--font-mono);
+      background: #e2e8f0;
+      color: #334155;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-weight: 600;
+    }
+
+    /* Callout & Directives */
+    .callout-box {
+      background: var(--accent-red-bg);
+      border: 1px solid var(--accent-red-border);
+      border-left: 4px solid var(--accent-red);
+      padding: 12px 14px;
+      font-size: 11.5px;
+      color: #7f1d1d;
+      margin: 12px 0;
+      line-height: 1.5;
+      border-radius: 0 4px 4px 0;
+    }
+
+    /* Badges */
+    .badge-critical {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #f87171;
+      padding: 2px 7px;
+      border-radius: 3px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      display: inline-block;
+      letter-spacing: 0.02em;
+    }
+    .badge-warning {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fcd34d;
+      padding: 2px 7px;
+      border-radius: 3px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      display: inline-block;
+      letter-spacing: 0.02em;
+    }
+    .badge-pass {
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #6ee7b7;
+      padding: 2px 7px;
+      border-radius: 3px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      display: inline-block;
+      letter-spacing: 0.02em;
+    }
+
+    /* Standard Data Tables */
+    .doc-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+      margin: 10px 0 14px;
+    }
+    .doc-table th, .doc-table td {
+      border: 1px solid #cbd5e1;
+      padding: 7px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+    .doc-table th {
+      background: #f1f5f9;
+      font-weight: 700;
+      color: #1e293b;
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .doc-table tr:nth-child(even) { background: #f8fafc; }
+    .doc-table td.mono { font-family: var(--font-mono); font-size: 11px; }
+
+    /* Analytical KPI Metric Cards */
+    .kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin: 12px 0 16px;
+    }
+    .kpi-card {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      padding: 10px 12px;
+      text-align: center;
+    }
+    .kpi-label { font-size: 9.5px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.04em; }
+    .kpi-value { font-family: var(--font-mono); font-size: 14px; font-weight: 700; color: #0f172a; margin-top: 3px; }
+    .kpi-sub { font-size: 9.5px; color: #475569; font-weight: 500; margin-top: 2px; }
+
+    /* EXECUTIVE FINDING CARDS (Structured, Plain-Language Reasoning) */
+    .violation-card {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-left: 4px solid var(--accent-red);
+      border-radius: 4px;
+      margin-bottom: 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+    .violation-card.card-warning {
+      border-left-color: var(--accent-amber);
+    }
+
+    .violation-card-head {
+      background: #f8fafc;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 8px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .violation-code {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 11px;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .violation-citation {
+      font-family: var(--font-sans);
+      font-size: 10.5px;
+      font-weight: 600;
+      color: #475569;
+    }
+
+    /* 3-Column Comparative Structured Reasoning Matrix */
+    .violation-matrix {
+      display: grid;
+      grid-template-columns: 1fr 1.15fr 1.25fr;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 11px;
+    }
+    .matrix-col {
+      padding: 9px 12px;
+      border-right: 1px solid #e2e8f0;
+    }
+    .matrix-col:last-child { border-right: none; }
+    .matrix-title {
+      font-size: 9.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .title-baseline { color: #475569; }
+    .title-observed { color: #991b1b; }
+    .title-reasoning { color: #1e3a8a; }
+
+    .matrix-value {
+      font-size: 11px;
+      color: #0f172a;
+      line-height: 1.5;
+    }
+
+    /* Evidentiary Proof Footer */
+    .violation-evidence-footer {
+      background: #fafafa;
+      padding: 7px 12px;
+      font-size: 10.5px;
+      color: #334155;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      line-height: 1.4;
+    }
+    .evidence-pointer {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      color: #475569;
+      background: #f1f5f9;
+      padding: 2px 6px;
+      border-radius: 3px;
+      border: 1px solid #cbd5e1;
+    }
+
+    /* Key-Value Details */
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 14px;
+      background: #fafafa;
+      border: 1px solid #e2e8f0;
+      padding: 10px 14px;
+      border-radius: 4px;
+      font-size: 11.5px;
+      margin: 8px 0;
+    }
+
+    /* Signature & Seal Block */
+    .seal-block {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 36px;
+      margin-top: 24px;
+      padding-top: 14px;
+      border-top: 1px dashed #cbd5e1;
+      font-size: 11px;
+    }
+    .sign-box { text-align: center; }
+    .sign-line { border-bottom: 1px solid #0f172a; width: 75%; margin: 24px auto 5px; }
+
+    .sha-footer {
+      margin-top: 20px;
+      padding-top: 8px;
+      border-top: 1px solid #e2e8f0;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: #64748b;
+      word-break: break-all;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    /* Print Specific Styles */
+    @media print {
+      body { background: white; padding: 0; }
+      .action-bar { display: none; }
+      .document-page {
+        box-shadow: none;
+        max-width: 100%;
+        width: 100%;
+        padding: 12mm 12mm;
+        min-height: auto;
+      }
+      .doc-section-title { page-break-after: avoid; }
+      .violation-card { page-break-inside: avoid; }
+      .doc-table { page-break-inside: auto; }
+      .doc-table tr { page-break-inside: avoid; }
+      .seal-block { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Action Bar for in-browser viewing -->
+  <div class="action-bar">
+    <div style="display:flex; align-items:center; gap:10px;">
+      <a href="/app/reports" class="btn-back"><i data-lucide="arrow-left"></i> Return to Reports Panel</a>
+      <span style="font-weight:700; font-size:0.9rem;">Official Statutory Audit Dossier (Executive Standard)</span>
+    </div>
+    <div style="display:flex; gap:10px;">
+      <button class="btn-print" onclick="window.print()">
+        <i data-lucide="printer"></i> Print / Save as PDF
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Legal Document Page -->
+  <div class="document-page">
+    
+    <!-- Official Header -->
+    <div class="gov-header">
+      <div class="emblem-text">GOVERNMENT OF INDIA • STATUTORY VIGILANCE &amp; FORENSIC AUDIT RECORD</div>
+      <h1 class="ministry-title">Ministry of Statistics and Programme Implementation</h1>
+      <div class="division-title">Data Informatics &amp; Innovation Division (DIID) — MPLADS Sentinel Automated Oversight Wing</div>
+    </div>
+
+    <!-- Security & Priority Classification -->
+    <div class="security-banner">
+      <span id="doc-classification">Classification: CONFIDENTIAL // STATUTORY INQUIRY BRIEF — CAG &amp; CVC ADMISSIBLE</span>
+      <span id="doc-risk-priority">Audit Status: CRITICAL CONCERN (Compliance &amp; Health Score: 14.2 / 100)</span>
+    </div>
+
+    <!-- Master Forensic Case Metadata Grid -->
+    <div class="meta-grid">
+      <div>
+        <div class="meta-row"><span class="meta-label">Case Reference UID:</span><span id="doc-case-uid" class="meta-val">MOSPI/VIG/2026/CR-0842/UP-VAR</span></div>
+        <div class="meta-row"><span class="meta-label">Project ID:</span><span id="doc-work-id" class="meta-val">LS-EXP-2024-8842</span></div>
+        <div class="meta-row"><span class="meta-label">Sanction Ledger ID:</span><span id="doc-ledger-id" class="meta-val">SANC-UP-VAR-2024-8842</span></div>
+        <div class="meta-row"><span class="meta-label">House / State / PC:</span><span id="doc-location">Lok Sabha • Uttar Pradesh • Varanasi (PC-77)</span></div>
+        <div class="meta-row"><span class="meta-label">Implementing Agency:</span><span id="doc-agency">Rural Engineering Dept (RED), Div-II, Varanasi</span></div>
+        <div class="meta-row"><span class="meta-label">Awarded Contractor:</span><span id="doc-vendor">M/s Ajay Kumar Singh Construction (GSTIN: 09AAACA0123M1Z5)</span></div>
+      </div>
+      <div>
+        <div class="meta-row"><span class="meta-label">Sanctioned Allocation:</span><span id="doc-sanction" class="meta-val">₹24,00,000.00</span></div>
+        <div class="meta-row"><span class="meta-label">Cumulative Disbursed:</span><span id="doc-disbursed" class="meta-val" style="color:var(--accent-red);">₹23,79,048.00 (99.1%)</span></div>
+        <div class="meta-row"><span class="meta-label">Verified Milestone Delivery:</span><span id="doc-phy-progress" class="meta-val" style="color:var(--accent-red);">35.0% (Plinth Only)</span></div>
+        <div class="meta-row"><span class="meta-label">Unbacked Fund Advance:</span><span id="doc-outflow" class="meta-val" style="color:var(--accent-red);">₹15,39,048.00</span></div>
+        <div class="meta-row"><span class="meta-label">Compliance &amp; Health Score:</span><span id="doc-score" class="meta-val" style="color:var(--accent-red);">14.2 / 100 (Critical Concern)</span></div>
+        <div class="meta-row"><span class="meta-label">Administrative Action:</span><span class="meta-val" style="color:var(--accent-red); font-weight:bold;">Disbursement Frozen</span></div>
+      </div>
+    </div>
+
+    <!-- KPI Summary Strip (Clear, intuitive metrics) -->
+    <div class="kpi-strip">
+      <div class="kpi-card">
+        <div class="kpi-label">On-Ground Completion</div>
+        <div class="kpi-value" style="color:var(--accent-red);">35.0% Built</div>
+        <div class="kpi-sub">Plinth Only • Walls Missing</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Structured Invoicing</div>
+        <div class="kpi-value" style="color:var(--accent-red);">52 Vouchers</div>
+        <div class="kpi-sub">Drawn Below ₹20,000 Limit</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Contractor Concentration</div>
+        <div class="kpi-value" style="color:var(--accent-red);">88.4% Awarded</div>
+        <div class="kpi-sub">119 of 134 Works in District</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Unbacked Fund Advance</div>
+        <div class="kpi-value" style="color:var(--accent-red);">₹15.39 Lakhs</div>
+        <div class="kpi-sub">Disbursed Without Delivery</div>
+      </div>
+    </div>
+
+    <!-- 1. Executive Case Summary & Direct Reason -->
+    <h2 class="doc-section-title">
+      <span>1. Executive Case Summary &amp; Decision Rationale</span>
+      <span class="section-badge">EXECUTIVE SUMMARY</span>
+    </h2>
+    <p style="text-align: justify; margin-bottom: 8px; line-height: 1.6; font-size: 12px;">
+      This Statutory Investigation Brief is issued for target project <strong>LS-EXP-2024-8842</strong> (<em>"Construction of Boundary Wall &amp; Interlocking Pavers at Community Center, Badagaon"</em>). The project demonstrates serious statutory non-compliance, resulting in a low <strong>Compliance &amp; Health Score of 14.2 / 100</strong>. Key observations indicate premature drawdown of 99.1% of sanctioned funds against only 35.0% verified physical completion, systematic splitting of payment vouchers to bypass approval thresholds, and vendor cartelization in the district.
+    </p>
+
+    <div class="callout-box">
+      <strong>INTERIM STATUTORY ENFORCEMENT ORDER:</strong><br>
+      Pursuant to executive powers under Section 11.2 of the MPLADS Operational Guidelines read with General Financial Rules (GFR) 2017 Rule 211, all pending and future milestone disbursements to Implementing Agency <strong>Rural Engineering Department (RED Div-II)</strong> and Contractor <strong>M/s Ajay Kumar Singh Construction</strong> under CNA Account <strong>#UP-VAR-091</strong> are hereby <strong>FROZEN WITH IMMEDIATE EFFECT</strong> pending formal audit reconciliation.
+    </div>
+
+    <!-- 2. Statutory Violations & Plain-Language Reasoning Cards -->
+    <h2 class="doc-section-title">
+      <span>2. Detected Irregularities &amp; Core Reasoning</span>
+      <span class="section-badge">FINDINGS &amp; REASONING</span>
+    </h2>
+    <p style="margin-bottom: 10px; color:#475569; font-size:11.5px;">
+      Key operational findings with plain-language regulatory reasoning:
+    </p>
+
+    <!-- VIOLATION CARD 1: TENDER SPLITTING -->
+    <div class="violation-card">
+      <div class="violation-card-head">
+        <div class="violation-code">
+          <span style="color:var(--accent-red); font-weight:900;">FINDING 1</span>
+          <span>ARTIFICIAL PAYMENT FRAGMENTATION (TENDER SPLITTING)</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span class="violation-citation">GFR 2017 Rule 157 &amp; 149(i)</span>
+          <span class="badge-critical">CRITICAL</span>
+        </div>
+      </div>
+      <div class="violation-matrix">
+        <div class="matrix-col">
+          <div class="matrix-title title-baseline"><i data-lucide="shield" style="width:11px;"></i> Mandated Policy</div>
+          <div class="matrix-value">
+            Competitive e-procurement through open tenders or GeM portal is mandatory for cumulative civil work contracts. Dividing contracts into small chunks to avoid approvals is prohibited.
+          </div>
+        </div>
+        <div class="matrix-col">
+          <div class="matrix-title title-observed"><i data-lucide="activity" style="width:11px;"></i> Observed Fact</div>
+          <div class="matrix-value">
+            <strong>52 separate payment vouchers</strong> were issued between ₹19,900 and ₹19,995 across 43 days, totaling ₹23,79,048 to the same contractor.
+          </div>
+        </div>
+        <div class="matrix-col">
+          <div class="matrix-title title-reasoning"><i data-lucide="info" style="width:11px;"></i> Reasoning &amp; Impact</div>
+          <div class="matrix-value">
+            <strong>Reasoning:</strong> Payments were deliberately kept ₹8 below the ₹20,000 threshold to evade mandatory higher-tier executive sign-offs and open competitive bidding.
+          </div>
+        </div>
+      </div>
+      <div class="violation-evidence-footer">
+        <div><strong>Impact:</strong> Public funds were disbursed without competitive rate discovery or supervisory verification.</div>
+        <div class="evidence-pointer">LEDGER: VCH-2024-001 to 052</div>
+      </div>
+    </div>
+
+    <!-- VIOLATION CARD 2: PREMATURE DISBURSEMENT -->
+    <div class="violation-card">
+      <div class="violation-card-head">
+        <div class="violation-code">
+          <span style="color:var(--accent-red); font-weight:900;">FINDING 2</span>
+          <span>PREMATURE FUND RELEASE WITHOUT ON-SITE CONSTRUCTION</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span class="violation-citation">MPLADS Guidelines §3.4</span>
+          <span class="badge-critical">CRITICAL</span>
+        </div>
+      </div>
+      <div class="violation-matrix">
+        <div class="matrix-col">
+          <div class="matrix-title title-baseline"><i data-lucide="shield" style="width:11px;"></i> Mandated Policy</div>
+          <div class="matrix-value">
+            Fund releases must correspond strictly with verified on-ground completion. For foundation work, admissible payout cannot exceed 35% (₹8,40,000).
+          </div>
+        </div>
+        <div class="matrix-col">
+          <div class="matrix-title title-observed"><i data-lucide="activity" style="width:11px;"></i> Observed Fact</div>
+          <div class="matrix-value">
+            <strong>99.1% of sanctioned allocation</strong> (₹23.79 Lakhs) has been drawn down, while independent physical inspection verifies only 35.0% completion.
+          </div>
+        </div>
+        <div class="matrix-col">
+          <div class="matrix-title title-reasoning"><i data-lucide="info" style="width:11px;"></i> Reasoning &amp; Impact</div>
+          <div class="matrix-value">
+            <strong>Reasoning:</strong> Implementing agency paid out full project value before the brick boundary walls and paver blocks were even commenced on site.
+          </div>
+        </div>
+      </div>
+      <div class="violation-evidence-footer">
+        <div><strong>Impact:</strong> ₹15.39 Lakhs in public capital has been given as an unauthorized cash advance to the contractor without asset backing.</div>
+        <div class="evidence-pointer">INSPECTION REPORT: FVO-UP-041</div>
+      </div>
+    </div>
+
+    <!-- VIOLATION CARD 3: VENDOR MONOPOLY -->
+    <div class="violation-card card-warning">
+      <div class="violation-card-head">
+        <div class="violation-code">
+          <span style="color:var(--accent-amber); font-weight:900;">FINDING 3</span>
+          <span>EXCESSIVE VENDOR CONCENTRATION &amp; CARTELIZATION</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span class="violation-citation">Competition Act 2002 §3 &bull; GFR Rule 144</span>
+          <span class="badge-warning">HIGH</span>
+        </div>
+      </div>
+      <div class="violation-matrix">
+        <div class="matrix-col">
+          <div class="matrix-title title-baseline"><i data-lucide="shield" style="width:11px;"></i> Mandated Policy</div>
+          <div class="matrix-value">
+            Fair and transparent public procurement requires non-discriminatory participation. Single vendor concentration should not corner a parliamentary jurisdiction.
+          </div>
+        </div>
+        <div class="matrix-col">
+          <div class="matrix-title title-observed"><i data-lucide="activity" style="width:11px;"></i> Observed Fact</div>
+          <div class="matrix-value">
+            A single contractor was awarded <strong>119 out of 134 civil works</strong> (88.4% of total parliamentary constituency value, ₹2.84 Cr).
+          </div>
+        </div>
+        <div class="matrix-col">
+          <div class="matrix-title title-reasoning"><i data-lucide="info" style="width:11px;"></i> Reasoning &amp; Impact</div>
+          <div class="matrix-value">
+            <strong>Reasoning:</strong> Evidence points to exclusionary bidding practices that systematically favor one vendor over all local competing firms.
+          </div>
+        </div>
+      </div>
+      <div class="violation-evidence-footer">
+        <div><strong>Impact:</strong> Eliminates competitive cost pressure and indicates potential administrative favoritism.</div>
+        <div class="evidence-pointer">GSTIN: 09AAACA0123M1Z5</div>
+      </div>
+    </div>
+
+    <!-- VIOLATION CARD 4: OVERDUE UC -->
+    <div class="violation-card card-warning">
+      <div class="violation-card-head">
+        <div class="violation-code">
+          <span style="color:var(--accent-amber); font-weight:900;">FINDING 4</span>
+          <span>STATUTORY UTILIZATION CERTIFICATE (GFR 12-A) DEFAULT</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span class="violation-citation">GFR 2017 Rule 238(1)</span>
+          <span class="badge-warning">HIGH</span>
+        </div>
+      </div>
+      <div class="violation-matrix">
+        <div class="matrix-col">
+          <div class="matrix-title title-baseline"><i data-lucide="shield" style="width:11px;"></i> Mandated Policy</div>
+          <div class="matrix-value">
+            Statutory Utilization Certificates (Form GFR 12-A) signed by verified engineers must be submitted within 12 months of initial fund release.
+          </div>
+        </div>
+        <div class="matrix-col">
+          <div class="matrix-title title-observed"><i data-lucide="activity" style="width:11px;"></i> Observed Fact</div>
+          <div class="matrix-value">
+            More than <strong>19 months (588 days)</strong> have elapsed since initial disbursement. Form GFR 12-A remains unsubmitted.
+          </div>
+        </div>
+        <div class="matrix-col">
+          <div class="matrix-title title-reasoning"><i data-lucide="info" style="width:11px;"></i> Reasoning &amp; Impact</div>
+          <div class="matrix-value">
+            <strong>Reasoning:</strong> Project funds are unaccounted for on the statutory portal without engineer sign-off or measurement book reconciliation.
+          </div>
+        </div>
+      </div>
+      <div class="violation-evidence-footer">
+        <div><strong>Impact:</strong> Retains public funds in un-audited status, preventing formal accounting closure.</div>
+        <div class="evidence-pointer">DOC: MB-402 &bull; GFR-12A: NOT FILED</div>
+      </div>
+    </div>
+
+    <!-- VIOLATION CARD 5: PROCEDURAL RUBBER STAMP -->
+    <div class="violation-card card-warning">
+      <div class="violation-card-head">
+        <div class="violation-code">
+          <span style="color:var(--accent-amber); font-weight:900;">FINDING 5</span>
+          <span>EXPEDITED SANCTION WITHOUT TECHNICAL SITE SCRUTINY</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span class="violation-citation">MPLADS Guidelines §3.2</span>
+          <span class="badge-warning">MEDIUM</span>
+        </div>
+      </div>
+      <div class="violation-matrix">
+        <div class="matrix-col">
+          <div class="matrix-title title-baseline"><i data-lucide="shield" style="width:11px;"></i> Mandated Policy</div>
+          <div class="matrix-value">
+            Mandatory engineering scrutiny of cost estimates against State/Central PWD schedules of rates prior to sanction.
+          </div>
+        </div>
+        <div class="matrix-col">
+          <div class="matrix-title title-observed"><i data-lucide="activity" style="width:11px;"></i> Observed Fact</div>
+          <div class="matrix-value">
+            Administrative approval was issued in <strong>under 34 hours</strong> without documented engineering site inspection. Unit rate was ₹14,200/m vs standard ₹5,900/m.
+          </div>
+        </div>
+        <div class="matrix-col">
+          <div class="matrix-title title-reasoning"><i data-lucide="info" style="width:11px;"></i> Reasoning &amp; Impact</div>
+          <div class="matrix-value">
+            <strong>Reasoning:</strong> Rapid rubber-stamp sanctioning approved an inflated cost estimate without independent technical verification.
+          </div>
+        </div>
+      </div>
+      <div class="violation-evidence-footer">
+        <div><strong>Impact:</strong> Cost inflated by over 140% above benchmark rates without recorded technical justification.</div>
+        <div class="evidence-pointer">REC: 12-Jan-2024 &rarr; SANC: 13-Jan-2024</div>
+      </div>
+    </div>
+
+    <!-- 3. Multi-Dataset Reconciliation -->
+    <h2 class="doc-section-title">
+      <span>3. Cross-Dataset Ledger Reconciliation</span>
+      <span class="section-badge">TRANSACTION LEDGER</span>
+    </h2>
+    <p style="margin-bottom: 6px; color:#475569; font-size:11.5px;">
+      Reconciliation across official parliamentary project registers:
+    </p>
+
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th style="width:22%;">Pipeline Register</th>
+          <th style="width:20%;">Reference ID</th>
+          <th style="width:26%;">Observed Record Details</th>
+          <th style="width:20%;">Official Benchmark</th>
+          <th style="width:12%;">Audit Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1. Works Recommended</strong></td>
+          <td class="mono">REC-UP-VAR-2024-8842</td>
+          <td>Approved Rate: ₹14,200 / linear meter (169m boundary wall)</td>
+          <td>Standard PWD Rate: ₹5,900 / linear meter</td>
+          <td><span class="badge-critical">Cost Outlier</span></td>
+        </tr>
+        <tr>
+          <td><strong>2. Works Sanctioned</strong></td>
+          <td class="mono">SANC-UP-VAR-2024-8842</td>
+          <td>Approved 33.6 hours after initial MP recommendation</td>
+          <td>Technical Scrutiny SLA: 15 to 45 days</td>
+          <td><span class="badge-warning">Rubber Stamp</span></td>
+        </tr>
+        <tr>
+          <td><strong>3. Expenditure as on Date</strong></td>
+          <td class="mono">VCH-2024-001 to 052</td>
+          <td>52 disbursements of ~₹19,992 across 43 days (Total: ₹23,79,048)</td>
+          <td>Standard milestone-linked tranches via RTGS</td>
+          <td><span class="badge-critical">Split Invoicing</span></td>
+        </tr>
+        <tr>
+          <td><strong>4. Works Completed</strong></td>
+          <td class="mono">CMP-UP-VAR-2024-8842</td>
+          <td>Marked "Completed" with a blank (0-byte) image attachment</td>
+          <td>Mandatory dual-angle photographic site proof</td>
+          <td><span class="badge-critical">False Sign-Off</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- 4. Field Inspection Summary -->
+    <h2 class="doc-section-title">
+      <span>4. On-Site Physical Inspection Findings</span>
+      <span class="section-badge">FIELD VERIFICATION</span>
+    </h2>
+
+    <div class="detail-grid">
+      <div>
+        <div><strong>Field Verification Officer:</strong> Shri Rajesh Sharma (ID: FVO-UP-041)</div>
+        <div><strong>Inspection Date &amp; Time:</strong> 24-Aug-2026, 14:32 IST</div>
+        <div><strong>Site Location:</strong> <code>25.3176° N, 82.9739° E</code> (Badagaon Community Center)</div>
+      </div>
+      <div>
+        <div><strong>Geofence Verification:</strong> <span class="badge-pass">Verified on Site (42m buffer)</span></div>
+        <div><strong>Sub-Structure (Foundation Plinth):</strong> <span class="mono" style="font-weight:700; color:var(--accent-emerald);">Verified Built (35.0% of Scope)</span></div>
+        <div><strong>Superstructure &amp; Paver Blocks:</strong> <span class="mono" style="font-weight:700; color:var(--accent-red);">Completely Missing (0.0% on Ground)</span></div>
+      </div>
+    </div>
+
+    <table class="doc-table" style="margin-top:6px;">
+      <thead>
+        <tr>
+          <th>Engineering Scope Item</th>
+          <th>Approved Project Specification</th>
+          <th>On-Site Physical Inspection Finding</th>
+          <th>Execution Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Foundation &amp; Excavation</strong></td>
+          <td>169 linear meters of brick plinth foundation</td>
+          <td>Foundation structure completed and solid</td>
+          <td><span class="badge-pass">Completed (35%)</span></td>
+        </tr>
+        <tr>
+          <td><strong>Brick Boundary Wall</strong></td>
+          <td>169 linear meters &times; 2.4 meters height</td>
+          <td>No brick walls constructed on site</td>
+          <td><span class="badge-critical">Not Started (0%)</span></td>
+        </tr>
+        <tr>
+          <td><strong>Interlocking Paver Blocks</strong></td>
+          <td>450 square meters M-30 paver flooring</td>
+          <td>Ground remains unpaved bare soil</td>
+          <td><span class="badge-critical">Not Started (0%)</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- 5. Financial Summary & Enforcement Directives -->
+    <h2 class="doc-section-title">
+      <span>5. Financial Reconciliation &amp; Action Directives</span>
+      <span class="section-badge">DIRECTIVES</span>
+    </h2>
+
+    <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:12px 16px; border-radius:4px; margin-bottom:12px; font-size:11.5px; line-height:1.6;">
+      <div style="font-weight:700; color:#1e293b; margin-bottom:6px; font-size:12px; text-transform:uppercase; letter-spacing:0.03em;">
+        Account Reconciliation Summary:
+      </div>
+      <div>&bull; Total Public Funds Disbursed: <strong>₹23,79,048.00</strong> (99.1% of sanctioned allocation)</div>
+      <div>&bull; Legitimate Admissible Value for Verified Foundation Work (35%): <strong>₹8,40,000.00</strong></div>
+      <div>&bull; <strong>Unearned Advance Payout (Unbacked Disbursal):</strong> <strong style="color:var(--accent-red);">₹15,39,048.00</strong></div>
+      <div>&bull; Applicable Statutory Interest under GFR Rule 238: <strong>₹4,20,534.00</strong></div>
+      <div style="margin-top:4px; padding-top:4px; border-top:1px dashed #cbd5e1;">
+        &bull; <strong>Total Revenue Reconciliation Demand:</strong> <strong style="color:var(--accent-blue); font-size:13px; background:#dbeafe; padding:1px 6px; border-radius:3px;">₹19,59,582.00</strong>
+      </div>
+    </div>
+
+    <!-- Numbered Legal Directions -->
+    <ol style="margin-left: 20px; font-size: 11.5px; line-height: 1.6; text-align: justify;">
+      <li>
+        <strong>Administrative Payment Freeze:</strong> Immediately freeze all pending disbursements under CNA Account #UP-VAR-091 for Implementing Agency RED Div-II and Contractor M/s Ajay Kumar Singh Construction.
+      </li>
+      <li>
+        <strong>Statutory Explanation Notice:</strong> Issue a 14-day statutory demand notice for <strong>₹19,59,582.00</strong> under GFR Rule 238(1) to recover unearned advance disbursements.
+      </li>
+      <li>
+        <strong>Contractor Eligibility Review:</strong> Initiate debarment review against M/s Ajay Kumar Singh Construction on GeM and state procurement portals for artificial tender splitting.
+      </li>
+      <li>
+        <strong>Departmental Inquiry:</strong> Order a formal inquiry into the false completion sign-off and lack of measurement book verification.
+      </li>
+      <li>
+        <strong>Submission to Audit Authorities:</strong> Transmit this dossier to the Principal Accountant General (Audit-II) and Chief Vigilance Officer for constituency-wide review.
+      </li>
+    </ol>
+
+    <!-- Signatures and Stamp Block -->
+    <div class="seal-block">
+      <div class="sign-box">
+        <div style="font-weight:700; color:#475569; font-size:11px; text-transform:uppercase; letter-spacing:0.04em;">FORENSIC INVESTIGATION OFFICER</div>
+        <div class="sign-line"></div>
+        <div style="font-weight:700; font-size:12px;">(Dr. Anand V. Prakash)</div>
+        <div style="color:#64748b; font-size:10.5px;">Director, Forensic Data Oversight &amp; Surveillance Wing</div>
+        <div style="color:#64748b; font-size:10px;">Ministry of Statistics and Programme Implementation (MoSPI)</div>
+      </div>
+      <div class="sign-box">
+        <div style="font-weight:700; color:#475569; font-size:11px; text-transform:uppercase; letter-spacing:0.04em;">STATUTORY AUDIT CONTROLLER</div>
+        <div class="sign-line"></div>
+        <div style="font-weight:700; font-size:12px;">(Smt. Meenakshi Sundaram, IA&amp;AS)</div>
+        <div style="color:#64748b; font-size:10.5px;">Principal Accountant General / Central Nodal Vigilance Authority</div>
+        <div style="color:#64748b; font-size:10px;">Office of the Comptroller &amp; Auditor General of India (CAG)</div>
+      </div>
+    </div>
+
+    <!-- Cryptographic Hash & Verification Footer -->
+    <div class="sha-footer">
+      DIGITALLY VERIFIED STATUTORY AUDIT DOSSIER &bull; GENERATED VIA MPLADS SENTINEL REGULATORY PLATFORM<br>
+      SHA-256 PROVENANCE HASH: <code>e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855</code><br>
+      PUBLIC VERIFICATION GATEWAY: <code>https://mplads.mospi.gov.in/sentinel/verify/MOSPI-VIG-2026-CR-0842</code>
+    </div>
+
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    function updateDossierData(data) {
+      if (!data) return;
+      if (data.workId) {
+        const el = document.getElementById('doc-work-id');
+        if (el) el.textContent = data.workId;
+      }
+      if (data.caseUid) {
+        const el = document.getElementById('doc-case-uid');
+        if (el) el.textContent = data.caseUid;
+      }
+      if (data.title) {
+        const titleEl = document.querySelector('.case-title-target');
+        if (titleEl) titleEl.textContent = data.title;
+      }
+      if (data.state || data.district) {
+        const el = document.getElementById('doc-location');
+        if (el) el.textContent = `${data.state || 'National'} • ${data.district || 'District Central'}`;
+      }
+      if (data.agency) {
+        const el = document.getElementById('doc-agency');
+        if (el) el.textContent = data.agency;
+      }
+      if (data.sanction !== undefined && data.sanction !== null) {
+        const el = document.getElementById('doc-sanction');
+        if (el) el.textContent = typeof data.sanction === 'number' ? '₹' + data.sanction.toLocaleString('en-IN') : data.sanction;
+      }
+      if (data.disbursed !== undefined && data.disbursed !== null) {
+        const el = document.getElementById('doc-disbursed');
+        if (el) el.textContent = typeof data.disbursed === 'number' ? '₹' + data.disbursed.toLocaleString('en-IN') : data.disbursed;
+      }
+
+      const isDup = (data.riskLevel || '').toLowerCase() === 'duplicate' || data.isDuplicate || (data.riskBand || '').toUpperCase() === 'DUPLICATE';
+      const scoreEl = document.getElementById('doc-score');
+      const prioEl = document.getElementById('doc-risk-priority');
+
+      if (isDup) {
+        if (scoreEl) {
+          scoreEl.textContent = 'NOT RATED (DUPLICATE)';
+          scoreEl.style.color = '#9333ea';
+        }
+        if (prioEl) {
+          prioEl.textContent = 'Status: DUPLICATE WORK (SCOPE OVERLAP // NO RATING)';
+          prioEl.style.color = '#7e22ce';
+        }
+      } else if (data.riskScore !== undefined && data.riskScore !== null && data.riskScore !== '') {
+        const numScore = Number(data.riskScore);
+        if (scoreEl) {
+          scoreEl.textContent = `${numScore} / 100`;
+          scoreEl.style.color = numScore >= 80 ? 'var(--accent-emerald)' : numScore >= 50 ? 'var(--accent-amber)' : 'var(--accent-red)';
+        }
+        if (prioEl) {
+          const statusLabel = numScore >= 80 ? 'NORMAL / HEALTHY' : numScore >= 60 ? 'LOW RISK' : numScore >= 40 ? 'MEDIUM RISK' : numScore >= 20 ? 'HIGH RISK' : 'CRITICAL CONCERN';
+          prioEl.textContent = `Audit Status: ${statusLabel} (Compliance & Health Score: ${numScore} / 100)`;
+          prioEl.style.color = numScore >= 80 ? 'var(--accent-emerald)' : numScore >= 50 ? 'var(--accent-amber)' : 'var(--accent-red)';
+        }
+      }
+    }
+
+    window.addEventListener('message', function(event) {
+      if (event.data && event.data.type === 'LOAD_WORK_DATA') {
+        updateDossierData(event.data.payload);
+      }
+    });
+
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has('workId')) {
+        updateDossierData({
+          workId: urlParams.get('workId'),
+          caseUid: urlParams.get('caseUid') || `MOSPI/VIG/2026/CR-${urlParams.get('workId')}`,
+          title: urlParams.get('title'),
+          state: urlParams.get('state'),
+          district: urlParams.get('district'),
+          agency: urlParams.get('agency'),
+          sanction: urlParams.get('sanction'),
+          disbursed: urlParams.get('disbursed'),
+          riskLevel: urlParams.get('riskLevel'),
+          riskScore: urlParams.get('riskScore'),
+        });
+      }
+    } catch(e) {}
+  </script>
+</body>
+</html>
