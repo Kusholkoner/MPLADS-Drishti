@@ -39,16 +39,17 @@ class CostAnomalyAI:
                 )
 
         # 2. Multi-Dimensional Unsupervised Tabular Anomaly Detection via IsolationForest
+        # AFTER (fixed)
         try:
             profile_data = {
                 "financials": {
                     "sanctionedAmount": sanc_amt,
                     "unreconciledGap": profile.financials.unreconciled_gap,
-                    "costDeviationPercent": profile.financials.cost_deviation_percent,
+                    "costDeviationPercent": profile.financials.cost_deviation_pct,   # ✅ matches schemas.py
                 },
-                "financialProgress": profile.financial_progress,
-                "physicalProgress": profile.physical_progress,
-                "divergenceGap": profile.financial_progress - profile.physical_progress,
+                "financialProgress": profile.financial_progress_pct,      # ✅
+                "physicalProgress": profile.physical_progress_pct,        # ✅
+                "divergenceGap": profile.financial_progress_pct - profile.physical_progress_pct,  # ✅
                 "milestones": profile.milestones,
             }
             det_res = FinancialAnomalyDetector.analyze_work(profile_data)
@@ -67,6 +68,9 @@ class CostAnomalyAI:
                     )
                 )
         except Exception as err:
-            pass
+            # Log instead of silently swallowing — you want to know if this ever fires again
+            import logging
+            logging.getLogger("CostAnomalyAI").warning(f"IsolationForest evaluation failed: {err}")
 
         return signals
+

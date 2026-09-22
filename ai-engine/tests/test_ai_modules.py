@@ -244,6 +244,24 @@ class TestAIModules(unittest.TestCase):
         self.assertIn("dossier", result)
         self.assertEqual(result["risk_evaluation"]["risk_band"], "critical")
 
+    # add to test_ai_modules.py, inside TestAIModules
+    def test_mod05_isolation_forest_actually_runs(self):
+        """Regression test: ensures the multi-dim IsolationForest branch doesn't silently fail."""
+        from services.financial_anomaly_detector import FinancialAnomalyDetector
+        profile_data = {
+            "financials": {
+                "sanctionedAmount": self.profile.financials.sanctioned_amount,
+                "unreconciledGap": self.profile.financials.unreconciled_gap,
+                "costDeviationPercent": self.profile.financials.cost_deviation_pct,
+            },
+            "financialProgress": self.profile.financial_progress_pct,
+            "physicalProgress": self.profile.physical_progress_pct,
+            "divergenceGap": self.profile.financial_progress_pct - self.profile.physical_progress_pct,
+            "milestones": self.profile.milestones,
+        }
+        result = FinancialAnomalyDetector.analyze_work(profile_data)
+        self.assertIn("is_anomaly", result)
+        self.assertIn("risk_contribution", result)
 
 if __name__ == "__main__":
     unittest.main()

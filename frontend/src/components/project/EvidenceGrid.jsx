@@ -56,7 +56,7 @@ export const EvidenceGrid = ({ evidenceList, className = "", }) => {
 
               {/* Footer info */}
               <div className="pt-2 mt-2 border-t border-slate-200/60 dark:border-slate-800 text-[10px] text-slate-400 flex items-center justify-between">
-                <span>{e.provenance.sourceSystem.split(" ")[0]}</span>
+                <span>{e.provenance?.sourceSystem ? e.provenance.sourceSystem.split(" ")[0] : "Sentinel"}</span>
                 <span>{e.fileSize || "Verified Record"}</span>
               </div>
             </Link>);

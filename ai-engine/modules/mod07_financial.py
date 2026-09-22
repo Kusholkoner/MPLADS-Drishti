@@ -36,18 +36,24 @@ class FinancialIntelligenceAI:
 
         # 2. Split Payment Structuring (e.g. 52 installments on a single Work ID)
         installment_count = fin.installment_count or len(fin.installments)
+        avg_installment = fin.disbursed_amount / max(1, installment_count)
+
         if installment_count >= STRUCTURING_MIN_INSTALLMENTS:
-            avg_installment = fin.disbursed_amount / max(1, installment_count)
+            is_threshold_evasion = avg_installment <= STRUCTURING_SPLIT_THRESHOLD_INR
             signals.append(
                 AnomalySignal(
                     signal_id="FIN-INSTALLMENT-STRUCTURING",
                     dimension="financial",
-                    severity="critical",
+                    severity="critical" if is_threshold_evasion else "high",
                     module_name="Financial Intelligence AI v2.1",
-                    score_contribution=90.0,
+                    score_contribution=90.0 if is_threshold_evasion else 78.0,
                     confidence=0.96,
                     finding=f"High-frequency installment structuring detected ({installment_count} separate vouchers, avg ₹{avg_installment:,.0f})",
-                    explanation=f"Payments broken down into {installment_count} micro-installments, characteristic of procurement threshold avoidance structuring.",
+                    explanation=(
+                        f"Payments broken into {installment_count} micro-installments averaging ₹{avg_installment:,.0f} each"
+                        + (f", just under the ₹{STRUCTURING_SPLIT_THRESHOLD_INR:,.0f} approval threshold — consistent with deliberate threshold evasion." if is_threshold_evasion
+                           else f", above the ₹{STRUCTURING_SPLIT_THRESHOLD_INR:,.0f} threshold but still an unusually fragmented payment pattern.")
+                    ),
                     citation="GFR 2017 Rule 157 — Prohibition against splitting of tenders to avoid higher authority approvals",
                 )
             )

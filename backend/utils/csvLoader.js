@@ -139,7 +139,7 @@ const OFFICIAL_DATASETS_META = [
 ];
 
 /**
- * Loads and parses a CSV dataset strictly from Supabase Cloud Storage (No local storage lookups)
+ * Loads and parses a CSV dataset: checks local storage first, then Supabase Cloud Storage
  */
 async function loadCSVFile(filename, limit = 1000) {
   const cacheKey = `${filename}_${limit}`;
@@ -147,10 +147,26 @@ async function loadCSVFile(filename, limit = 1000) {
     return datasetCache.get(cacheKey);
   }
 
-  // 1. Fetch directly from Supabase Public Storage URL
+  // 1. Check local official datasets directory first (instant, zero network latency)
+  const fs = require("fs");
+  const localFilePath = path.join(__dirname, "../data/official_datasets", filename);
+  if (fs.existsSync(localFilePath)) {
+    try {
+      const stream = fs.createReadStream(localFilePath);
+      const rows = await parseStream(stream, limit);
+      if (rows && rows.length > 0) {
+        datasetCache.set(cacheKey, rows);
+        return rows;
+      }
+    } catch (err) {
+      console.warn(`[CSVLoader] Error reading local file '${filename}':`, err.message);
+    }
+  }
+
+  // 2. Fetch directly from Supabase Public Storage URL with 2-second timeout
   try {
     const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/${encodeURIComponent(filename)}`;
-    const response = await fetch(publicUrl);
+    const response = await fetch(publicUrl, { signal: AbortSignal.timeout(2000) });
     if (response.ok) {
       const text = await response.text();
       if (text && !text.includes("NoSuchKey") && !text.includes("error")) {
@@ -163,7 +179,7 @@ async function loadCSVFile(filename, limit = 1000) {
     // Continue to SDK fallback
   }
 
-  // 2. Try Supabase Storage SDK download
+  // 3. Try Supabase Storage SDK download
   if (supabase) {
     try {
       const { data, error } = await supabase.storage.from(BUCKET_NAME).download(filename);

@@ -2,7 +2,7 @@
 FastAPI REST Application for MPLADS  AI Engine
 SIH26102 | Ministry of Statistics and Programme Implementation (MoSPI)
 """
-
+import base64
 import sys
 import os
 import json
@@ -19,6 +19,7 @@ from pydantic import BaseModel
 from config import HOST, PORT, ENVIRONMENT, CLOUD_DATASETS
 from models.schemas import (
     CanonicalWorkProfile,
+    EvidenceItem,
     AuditCopilotQuery,
     AuditCopilotResponse,
     VendorGraphResponse,
@@ -29,6 +30,10 @@ from modules import (
     AuditCopilot,
     GraphIntelligenceAI,
     ActiveLearningFeedback,
+)
+from services.evidence_ingestion import (
+    enrich_evidence_with_vision,
+    enrich_evidence_with_forensics,
 )
 from services.cloud_dataset_service import CloudDatasetService
 from services.pipeline_orchestrator import PipelineOrchestrator
@@ -66,6 +71,7 @@ def root():
     }
 
 
+@app.get("/health")
 @app.get("/api/v1/health")
 def health_check():
     return {
@@ -90,13 +96,107 @@ def list_cloud_datasets():
 
 @app.post("/api/v1/analyze-work")
 def analyze_work_profile(payload: Dict[str, Any]):
-    """Runs the complete 21-module AI surveillance pipeline on an input work profile."""
+    """
+    Runs evidence ingestion first, then the complete
+    21-module AI surveillance pipeline.
+    """
+
     try:
-        profile: CanonicalWorkProfile = EntityResolutionAI.build_canonical_profile(payload)
-        analysis_result = PipelineOrchestrator.run_full_pipeline(profile)
-        return {"success": True, "data": analysis_result}
+        # -----------------------------------------
+        # STEP 1: Evidence ingestion
+        # -----------------------------------------
+
+        evidence_list = payload.get("evidence", [])
+
+        for evidence in evidence_list:
+
+            image_base64 = evidence.get("image_base64")
+
+            # No image attached
+            if not image_base64:
+                continue
+
+            # Decode base64 image
+            try:
+                image_bytes = base64.b64decode(image_base64)
+            except Exception:
+                raise HTTPException(
+                    status_code=400,
+                    detail="Invalid base64 image data."
+                )
+
+            # Make sure metadata exists
+            evidence.setdefault("metadata", {})
+
+            evidence_type = evidence.get("type")
+
+            # -----------------------------------------
+            # IMAGE → VisionVerifier
+            # -----------------------------------------
+
+            if evidence_type == "image":
+
+                evidence_item = EvidenceItem(**evidence)
+
+                evidence_item = enrich_evidence_with_vision(
+                    evidence_item,
+                    image_bytes
+                )
+
+                evidence.update(
+                    evidence_item.model_dump()
+                )
+
+            # -----------------------------------------
+            # DOCUMENT → DocumentForensics
+            # -----------------------------------------
+
+            elif evidence_type in [
+                "document",
+                "certificate",
+                "invoice",
+            ]:
+
+                evidence_item = EvidenceItem(**evidence)
+
+                evidence_item = enrich_evidence_with_forensics(
+                    evidence_item,
+                    image_bytes
+                )
+
+                evidence.update(
+                    evidence_item.model_dump()
+                )
+
+        # -----------------------------------------
+        # STEP 2: Build canonical profile
+        # -----------------------------------------
+
+        profile: CanonicalWorkProfile = (
+            EntityResolutionAI.build_canonical_profile(payload)
+        )
+
+        # -----------------------------------------
+        # STEP 3: Run complete AI pipeline
+        # -----------------------------------------
+
+        analysis_result = (
+            PipelineOrchestrator.run_full_pipeline(profile)
+        )
+
+        return {
+            "success": True,
+            "data": analysis_result
+        }
+
+    except HTTPException:
+        raise
+
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
 
 
 @app.post("/api/v1/semantic/similarity")
@@ -168,16 +268,20 @@ def compare_dhash_perceptual(payload: Dict[str, str]):
 @app.post("/api/v1/forensics/document-tamper-check")
 def check_document_tampering(payload: Dict[str, Any]):
     """
-    Error Level Analysis (ELA) forensic check for tampered monetary values or spliced digital stamps.
+    Runs real Error Level Analysis on a base64-encoded document/invoice image.
+    Expects payload = {"image_base64": "<...>", "quality": 90 (optional)}
     """
-    # Returns structured ELA report
-    return {
-        "model": "Error Level Analysis (ELA Forensic Imaging)",
-        "tamper_detected": payload.get("tamperDetected", False),
-        "tamper_confidence": 0.94 if payload.get("tamperDetected", False) else 0.04,
-        "max_error_level": 54.2 if payload.get("tamperDetected", False) else 14.1,
-        "verdict": "FLAGGED_DOCUMENT_MANIPULATION" if payload.get("tamperDetected", False) else "AUTHENTIC_DOCUMENT_STRUCTURE",
-    }
+    image_b64 = payload.get("image_base64")
+    if not image_b64:
+        raise HTTPException(status_code=400, detail="'image_base64' is required.")
+
+    try:
+        image_bytes = base64.b64decode(image_b64)
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid base64 image data.")
+
+    quality = int(payload.get("quality", 90))
+    return DocumentForensics.compute_ela(image_bytes, quality=quality)
 
 
 @app.post("/api/v1/copilot/query", response_model=AuditCopilotResponse)

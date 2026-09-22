@@ -1,6 +1,245 @@
 const { supabase, isConfigured } = require("../config/supabase");
 const supabaseService = require("../services/supabaseService");
 
+// ─────────────────────────────────────────────────────────────────────────────
+// ROLE LABELS
+// ─────────────────────────────────────────────────────────────────────────────
+const ROLE_LABELS = {
+  mospi_officer: "Central Ministry Officer",
+  state_nodal_authority: "State Nodal Authority",
+  mp: "Member of Parliament",
+  implementing_agency: "Implementing Agency",
+  investigator: "Vigilance Investigator",
+  field_verification_officer: "Field Verification Officer",
+  system_admin: "System Administrator",
+};
+
+const VALID_ROLES = Object.keys(ROLE_LABELS);
+
+// ─────────────────────────────────────────────────────────────────────────────
+// POST /api/auth/register
+// Registers a new user via Supabase Auth and stores profile in `profiles` table
+// ─────────────────────────────────────────────────────────────────────────────
+exports.register = async (req, res) => {
+  try {
+    const {
+      email,
+      password,
+      fullName,
+      role = "field_verification_officer",
+      designation = "Field Officer",
+      department = "Planning & Monitoring Cell",
+      state = "All India",
+      district = "All",
+      constituency = "",
+    } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ success: false, message: "Email and password are required." });
+    }
+    if (password.length < 6) {
+      return res.status(400).json({ success: false, message: "Password must be at least 6 characters." });
+    }
+    if (!VALID_ROLES.includes(role)) {
+      return res.status(400).json({ success: false, message: `Invalid role. Must be one of: ${VALID_ROLES.join(", ")}` });
+    }
+
+    if (isConfigured && supabase) {
+      // Use admin API (service role) to create user — bypasses email confirmation
+      const { data: newUser, error: createErr } = await supabase.auth.admin.createUser({
+        email: email.trim(),
+        password,
+        email_confirm: true, // Auto-confirm — avoids email confirmation requirement
+        user_metadata: {
+          full_name: fullName || email.split("@")[0],
+          role,
+          designation,
+          department,
+          state,
+          district,
+          constituency,
+        },
+      });
+
+      if (createErr) {
+        // Handle duplicate email
+        if (createErr.message?.includes("already registered") || createErr.code === "email_exists") {
+          return res.status(409).json({ success: false, message: "An account with this email already exists." });
+        }
+        return res.status(400).json({ success: false, message: createErr.message });
+      }
+
+      if (newUser?.user) {
+        // Upsert profile row (trigger may have already created it)
+        const profileData = {
+          id: newUser.user.id,
+          email: email.trim(),
+          full_name: fullName || email.split("@")[0],
+          role,
+          designation: designation || "Assigned Officer",
+          department: department || "MPLADS Administration",
+          jurisdiction_state: state || "All India",
+          jurisdiction_district: district || "All",
+          updated_at: new Date().toISOString(),
+        };
+
+        await supabase.from("profiles").upsert([profileData], { onConflict: "id" });
+
+        return res.status(201).json({
+          success: true,
+          message: "Officer account registered successfully.",
+          data: {
+            id: newUser.user.id,
+            email: newUser.user.email,
+            full_name: profileData.full_name,
+            role,
+            role_label: ROLE_LABELS[role],
+            designation,
+            department,
+          },
+        });
+      }
+    }
+
+    // Fallback (no Supabase) — just return success placeholder
+    return res.status(201).json({
+      success: true,
+      message: "Account registered in local mode (Supabase not configured).",
+      data: {
+        id: `usr-${Date.now()}`,
+        email: email.trim(),
+        full_name: fullName || email.split("@")[0],
+        role,
+        role_label: ROLE_LABELS[role],
+      },
+    });
+  } catch (error) {
+    console.error("[register]", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// POST /api/auth/login
+// Authenticates via Supabase, returns session token + profile
+// ─────────────────────────────────────────────────────────────────────────────
+exports.login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ success: false, message: "Email and password are required." });
+    }
+
+    if (isConfigured && supabase) {
+      const { data: authData, error: authErr } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password,
+      });
+
+      if (authErr) {
+        const msg = authErr.message || "";
+        if (msg.includes("Email not confirmed")) {
+          return res.status(403).json({
+            success: false,
+            message: "Email not confirmed. Please check your inbox for a verification link.",
+            code: "EMAIL_NOT_CONFIRMED",
+          });
+        }
+        if (msg.includes("Invalid login credentials")) {
+          return res.status(401).json({ success: false, message: "Invalid email or password." });
+        }
+        return res.status(401).json({ success: false, message: msg });
+      }
+
+      if (authData?.user) {
+        // Fetch profile from DB
+        let profile = null;
+        const { data: profileData, error: profileErr } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", authData.user.id)
+          .single();
+
+        if (!profileErr && profileData) {
+          profile = profileData;
+        }
+
+        return res.json({
+          success: true,
+          message: "Login successful.",
+          data: {
+            token: authData.session?.access_token,
+            refresh_token: authData.session?.refresh_token,
+            expires_at: authData.session?.expires_at,
+            user: {
+              id: authData.user.id,
+              email: authData.user.email,
+            },
+            profile: profile || {
+              id: authData.user.id,
+              email: authData.user.email,
+              full_name: authData.user.user_metadata?.full_name || authData.user.email?.split("@")[0],
+              role: authData.user.user_metadata?.role || "field_verification_officer",
+            },
+          },
+        });
+      }
+    }
+
+    return res.status(503).json({
+      success: false,
+      message: "Supabase is not configured. Cannot authenticate via backend.",
+    });
+  } catch (error) {
+    console.error("[login]", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// POST /api/auth/logout
+// ─────────────────────────────────────────────────────────────────────────────
+exports.logout = async (req, res) => {
+  try {
+    if (isConfigured && supabase) {
+      await supabase.auth.signOut();
+    }
+    res.json({ success: true, message: "Logged out successfully." });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// POST /api/auth/forgot-password
+// ─────────────────────────────────────────────────────────────────────────────
+exports.forgotPassword = async (req, res) => {
+  try {
+    const { email, redirectTo = "http://localhost:3000/login" } = req.body;
+    if (!email) {
+      return res.status(400).json({ success: false, message: "Email is required." });
+    }
+
+    if (isConfigured && supabase) {
+      const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+        redirectTo,
+      });
+      if (error) {
+        return res.status(400).json({ success: false, message: error.message });
+      }
+    }
+
+    // Always return success to prevent email enumeration
+    res.json({
+      success: true,
+      message: "If an account exists with this email, a password reset link has been sent.",
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 /**
  * 6 Core Operational User Types (per MPLADS_Sentinel_User_Types_RBAC.md)
  */

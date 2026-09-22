@@ -141,7 +141,7 @@ export const TopNav = ({ breadcrumbs, onOpenMobileMenu, contextProjectId, contex
                       ? "bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 font-bold"
                       : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"}`}>
                         <span className="truncate">{p.full_name}</span>
-                        <span className="text-[9px] opacity-70 ml-1 shrink-0">({p.role.split("_")[0]})</span>
+                        <span className="text-[9px] opacity-70 ml-1 shrink-0">({p.role ? p.role.split("_")[0] : ""})</span>
                       </button>))}
                   </div>
                 </div>

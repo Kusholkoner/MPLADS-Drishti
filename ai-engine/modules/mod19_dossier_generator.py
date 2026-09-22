@@ -13,7 +13,7 @@ from models.schemas import (
     EvidenceCard,
     InvestigationDossier,
 )
-from modules.mod18_explanation_engine import ExplanationEngine
+from .mod18_explanation_engine import ExplanationEngine
 
 
 class InvestigationDossierGenerator:
@@ -71,7 +71,8 @@ class InvestigationDossierGenerator:
                 "type": evd.type,
                 "title": evd.title,
                 "status": evd.status,
-                "sha256_hash": evd.sha256_hash or "8c6976e5b5410415bde3f802111c81ef408e647bbf9e9efc28a8a43fe7d02219",
+                "sha256_hash": evd.sha256_hash,          # None if not computed — don't fabricate
+                "hash_verified": evd.sha256_hash is not None,
                 "findings": evd.findings,
             })
 

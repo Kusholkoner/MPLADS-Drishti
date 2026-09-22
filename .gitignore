@@ -148,3 +148,5 @@ Desktop.ini
 *.swp
 *.swo
 *~
+node_modules(old)/
+*/node_modules(old)/

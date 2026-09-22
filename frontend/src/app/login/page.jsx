@@ -1,7 +1,7 @@
 "use client";
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
   ShieldCheck,
   Lock,
@@ -30,9 +30,8 @@ import { useAuth, DEMO_PERSONAS, ROLE_DEFAULT_ROUTES } from "@/lib/authContext";
 import { APP_NAME, APP_HINDI_NAME } from "@/lib/constants";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 
-function LoginContent() {
+export default function LoginPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { signInWithPassword, signInDemo, registerUser } = useAuth();
 
   // Active Tab: "login" or "register"
@@ -61,11 +60,13 @@ function LoginContent() {
   const [successMsg, setSuccessMsg] = useState(null);
   const [loggedOutBanner, setLoggedOutBanner] = useState(false);
 
+  // Read query params client-side to avoid Suspense/hydration issues
   useEffect(() => {
-    if (searchParams.get("status") === "signed_out" || searchParams.get("logout") === "true") {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("status") === "signed_out" || params.get("logout") === "true") {
       setLoggedOutBanner(true);
     }
-  }, [searchParams]);
+  }, []);
 
   // Handle Login Submit
   const handleLoginSubmit = async (e) => {
@@ -80,7 +81,7 @@ function LoginContent() {
       if (res.error) {
         setErrorMsg(res.error.message);
       } else {
-        const dest = ROLE_DEFAULT_ROUTES[res.profile?.role] || "/app/command-center";
+        const dest = ROLE_DEFAULT_ROUTES[res.profile?.role] || "/app/dashboard";
         setSuccessMsg(`Authenticated as ${res.profile?.full_name || "Officer"}! Redirecting...`);
         setTimeout(() => router.push(dest), 600);
       }
@@ -121,9 +122,15 @@ function LoginContent() {
       });
 
       if (res.error) {
-        setErrorMsg(res.error.message);
+        // Special case: email confirmation required
+        if (res.requiresEmailConfirmation) {
+          setSuccessMsg(res.error.message);
+          setErrorMsg(null);
+        } else {
+          setErrorMsg(res.error.message);
+        }
       } else {
-        const dest = ROLE_DEFAULT_ROUTES[res.profile?.role] || "/app/command-center";
+        const dest = ROLE_DEFAULT_ROUTES[res.profile?.role] || "/app/dashboard";
         setSuccessMsg(`Officer account registered successfully! Initializing workspace for ${res.profile?.full_name}...`);
         setTimeout(() => router.push(dest), 700);
       }
@@ -666,10 +673,3 @@ function LoginContent() {
   );
 }
 
-export default function LoginPage() {
-  return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 text-slate-500 text-xs">Loading MPLADS Sentinel...</div>}>
-      <LoginContent />
-    </Suspense>
-  );
-}

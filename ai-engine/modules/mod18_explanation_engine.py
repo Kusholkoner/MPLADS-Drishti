@@ -18,6 +18,7 @@ class ExplanationEngine:
             return {
                 "headline": f"Work {profile.work_id} is verified compliant with zero statutory or financial anomalies.",
                 "summary": "All lifecycle milestones, payment releases, and photographic evidence match baseline expectations.",
+                "risk_band": risk_res.risk_band,
                 "key_findings": [],
                 "statutory_citations": [],
             }

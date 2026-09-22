@@ -1,16 +1,68 @@
-import { updateSession } from "@/utils/supabase/middleware";
+import { createServerClient } from "@supabase/ssr";
+import { NextResponse } from "next/server";
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey =
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+const isSupabaseConfigured = Boolean(
+  supabaseUrl &&
+    supabaseUrl.startsWith("http") &&
+    supabaseKey &&
+    supabaseKey.length > 20
+);
+
 export async function middleware(request) {
+  // If Supabase is not configured, pass through without crashing
+  if (!isSupabaseConfigured) {
+    return NextResponse.next({ request: { headers: request.headers } });
+  }
+
+  try {
     return await updateSession(request);
+  } catch (err) {
+    console.warn("[Middleware] Session refresh failed:", err.message);
+    return NextResponse.next({ request: { headers: request.headers } });
+  }
 }
+
+async function updateSession(request) {
+  let supabaseResponse = NextResponse.next({
+    request: { headers: request.headers },
+  });
+
+  const supabase = createServerClient(supabaseUrl, supabaseKey, {
+    cookies: {
+      getAll() {
+        return request.cookies.getAll();
+      },
+      setAll(cookiesToSet) {
+        cookiesToSet.forEach(({ name, value }) =>
+          request.cookies.set(name, value)
+        );
+        supabaseResponse = NextResponse.next({ request });
+        cookiesToSet.forEach(({ name, value, options }) =>
+          supabaseResponse.cookies.set(name, value, options)
+        );
+      },
+    },
+  });
+
+  // Refresh session — do not add logic between createServerClient and getUser()
+  await supabase.auth.getUser();
+
+  return supabaseResponse;
+}
+
 export const config = {
-    matcher: [
-        /*
-         * Match all request paths except for the ones starting with:
-         * - _next/static (static files)
-         * - _next/image (image optimization files)
-         * - favicon.ico (favicon file)
-         * Feel free to modify this pattern to include more paths.
-         */
-        "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
-    ],
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+  ],
 };

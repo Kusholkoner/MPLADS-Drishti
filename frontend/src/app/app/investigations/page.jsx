@@ -136,14 +136,22 @@ export default function InvestigationsQueuePage() {
 
                         {/* Assigned To */}
                         <td className="px-4 py-3.5 whitespace-nowrap text-slate-600 dark:text-slate-300">
-                          {c.assignedTo ? (<div>
+                          {c.assignedTo ? (
+                            <div>
                               <p className="font-semibold text-slate-800 dark:text-slate-200">
-                                {c.assignedTo.name}
+                                {typeof c.assignedTo === "object"
+                                  ? (c.assignedTo.name || "Assigned Officer")
+                                  : String(c.assignedTo)}
                               </p>
-                              <span className="text-[10px] text-slate-400">
-                                {c.assignedTo.role.split(",")[0]}
-                              </span>
-                            </div>) : (<span className="text-slate-400 italic">Unassigned</span>)}
+                              {typeof c.assignedTo === "object" && c.assignedTo?.role ? (
+                                <span className="text-[10px] text-slate-400">
+                                  {String(c.assignedTo.role).split(",")[0]}
+                                </span>
+                              ) : null}
+                            </div>
+                          ) : (
+                            <span className="text-slate-400 italic">Unassigned</span>
+                          )}
                         </td>
 
                         {/* Status */}

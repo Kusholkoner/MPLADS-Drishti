@@ -214,7 +214,7 @@ export default function InvestigationWorkspacePage({ params }) {
                           {e.title}
                         </p>
                         <span className="text-[10px] font-mono text-slate-400">
-                          {e.id} • {e.type.toUpperCase()} • {e.provenance.sourceSystem.split(" ")[0]}
+                          {e.id} • {e.type?.toUpperCase() || "EVIDENCE"} • {e.provenance?.sourceSystem ? e.provenance.sourceSystem.split(" ")[0] : "Sentinel"}
                         </span>
                       </div>
                     </div>

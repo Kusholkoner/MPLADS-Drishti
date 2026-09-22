@@ -25,6 +25,7 @@ export const CommandPalette = ({ isOpen, onClose }) => {
     if (!isOpen)
         return null;
     const quickNav = [
+        { label: "Dashboard (System & AI Pipeline)", href: "/app/dashboard", icon: LayoutDashboard, category: "Navigation" },
         { label: "Command Center (National Overview)", href: "/app/command-center", icon: LayoutDashboard, category: "Navigation" },
         { label: "Master Projects Directory", href: "/app/projects", icon: FolderKanban, category: "Navigation" },
         { label: "Showcase Project: Community Hall (MPL-004821)", href: "/app/projects/MPL-004821", icon: Building, category: "Featured Case" },

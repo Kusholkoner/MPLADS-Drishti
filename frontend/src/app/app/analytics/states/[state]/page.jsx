@@ -70,7 +70,7 @@ export default function StateAnalyticsPage({ params }) {
             <MetricCard title="Monitored Works" value={stateData.totalWorks.toLocaleString("en-IN")} subtitle="Total state portfolio" trend={{ value: "Active surveillance", isPositive: true, isPositiveGood: true }} icon={Building} variant="default"/>
             <MetricCard title="Total Sanctioned" value={`₹${stateData.totalSanctionedCr} Cr`} subtitle={`₹${stateData.totalExpenditureCr} Cr disbursed`} trend={{ value: "PFMS connected", isPositive: true, isPositiveGood: true }} icon={TrendingUp} variant="default"/>
             <MetricCard title="High / Critical Works" value={`${stateData.highRiskWorks + stateData.criticalWorks}`} subtitle={`${stateData.criticalWorks} critical priority`} trend={{ value: "Prioritized audits", isPositive: true, isPositiveGood: false }} icon={ShieldAlert} variant="critical"/>
-            <MetricCard title="State Risk Index" value={`${stateData.averageRiskScore} / 100`} subtitle={stateData.primaryRiskFactor.split(" ")[0]} trend={{ value: "State baseline", isPositive: true, isPositiveGood: true }} icon={Building} variant="default"/>
+            <MetricCard title="State Risk Index" value={`${stateData.averageRiskScore} / 100`} subtitle={stateData.primaryRiskFactor ? stateData.primaryRiskFactor.split(" ")[0] : "State baseline"} trend={{ value: "State baseline", isPositive: true, isPositiveGood: true }} icon={Building} variant="default"/>
           </div>)}
 
         {/* District Breakdown Table */}

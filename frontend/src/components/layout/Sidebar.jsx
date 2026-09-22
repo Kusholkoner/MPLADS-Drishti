@@ -67,7 +67,8 @@ export const Sidebar = ({ onCloseMobile }) => {
     switch (role) {
       case "system_admin":
         return [
-          { label: "Command Center", href: "/app/command-center", icon: LayoutDashboard },
+          { label: "Dashboard", href: "/app/dashboard", icon: LayoutDashboard },
+          { label: "Command Center", href: "/app/command-center", icon: ShieldAlert },
           { label: "User & RBAC Manager", href: "/app/admin", icon: Users, badge: "Admin", badgeColor: "bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300" },
           { label: "Master Projects", href: "/app/projects", icon: FolderKanban },
           { label: "Risk Intelligence", href: "/app/risk", icon: ShieldAlert, badge: "161", badgeColor: "bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300" },
@@ -83,7 +84,8 @@ export const Sidebar = ({ onCloseMobile }) => {
 
       case "field_verification_officer":
         return [
-          { label: "Field Command Center", href: "/app/command-center", icon: LayoutDashboard },
+          { label: "Dashboard", href: "/app/dashboard", icon: LayoutDashboard },
+          { label: "Field Command Center", href: "/app/command-center", icon: ShieldAlert },
           { label: "Assigned Field Inspections", href: "/app/projects", icon: ClipboardCheck, badge: "9 Tasks", badgeColor: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300" },
           { label: "Reports", href: "/app/reports", icon: FileText, badge: "Reports", badgeColor: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300" },
           { label: "Site Evidence & Geotag", href: "/app/evidence", icon: FileCheck, badge: "Upload", badgeColor: "bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300" },
@@ -93,7 +95,8 @@ export const Sidebar = ({ onCloseMobile }) => {
 
       case "implementing_agency":
         return [
-          { label: "Agency Command Center", href: "/app/command-center", icon: LayoutDashboard },
+          { label: "Dashboard", href: "/app/dashboard", icon: LayoutDashboard },
+          { label: "Agency Command Center", href: "/app/command-center", icon: ShieldAlert },
           { label: "Executed Works", href: "/app/projects", icon: HardHat, badge: "26 Works", badgeColor: "bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300" },
           { label: "Reports", href: "/app/reports", icon: FileText, badge: "Reports", badgeColor: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300" },
           { label: "Contractor Invoices & Evidence", href: "/app/evidence", icon: FileCheck, badge: "Upload", badgeColor: "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300" },
@@ -102,7 +105,8 @@ export const Sidebar = ({ onCloseMobile }) => {
 
       case "mp":
         return [
-          { label: "Constituency Command Center", href: "/app/command-center", icon: LayoutDashboard },
+          { label: "Dashboard", href: "/app/dashboard", icon: LayoutDashboard },
+          { label: "Constituency Command Center", href: "/app/command-center", icon: ShieldAlert },
           { label: "Constituency Works", href: "/app/projects", icon: FolderKanban },
           { label: "Reports", href: "/app/reports", icon: FileText, badge: "Reports", badgeColor: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300" },
           { label: "Constituency Analytics", href: "/app/analytics", icon: BarChart3 },
@@ -112,7 +116,8 @@ export const Sidebar = ({ onCloseMobile }) => {
 
       case "state_nodal_authority":
         return [
-          { label: "State Command Center", href: "/app/command-center", icon: LayoutDashboard },
+          { label: "Dashboard", href: "/app/dashboard", icon: LayoutDashboard },
+          { label: "State Command Center", href: "/app/command-center", icon: ShieldAlert },
           { label: "Statewide Projects", href: "/app/projects", icon: FolderKanban },
           { label: "Reports", href: "/app/reports", icon: FileText, badge: "Reports", badgeColor: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300" },
           { label: "State Risk Alerts", href: "/app/risk", icon: ShieldAlert, badge: "State", badgeColor: "bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300" },
@@ -125,7 +130,8 @@ export const Sidebar = ({ onCloseMobile }) => {
 
       case "investigator":
         return [
-          { label: "Vigilance Command Center", href: "/app/command-center", icon: LayoutDashboard },
+          { label: "Dashboard", href: "/app/dashboard", icon: LayoutDashboard },
+          { label: "Vigilance Command Center", href: "/app/command-center", icon: ShieldAlert },
           { label: "Investigation Dossiers", href: "/app/investigations", icon: SearchCode, badge: "Active Cases", badgeColor: "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300" },
           { label: "Reports", href: "/app/reports", icon: FileText, badge: "Reports", badgeColor: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300" },
           { label: "Risk Anomaly Signals", href: "/app/risk", icon: ShieldAlert, badge: "161 Flags", badgeColor: "bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300" },
@@ -138,7 +144,8 @@ export const Sidebar = ({ onCloseMobile }) => {
       case "mospi_officer":
       default:
         return [
-          { label: "Command Center", href: "/app/command-center", icon: LayoutDashboard },
+          { label: "Dashboard", href: "/app/dashboard", icon: LayoutDashboard },
+          { label: "Command Center", href: "/app/command-center", icon: ShieldAlert },
           { label: "Master Projects", href: "/app/projects", icon: FolderKanban },
           { label: "Reports", href: "/app/reports", icon: FileText, badge: "Reports", badgeColor: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300" },
           { label: "Risk Intelligence", href: "/app/risk", icon: ShieldAlert, badge: "161", badgeColor: "bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300" },
@@ -160,7 +167,7 @@ export const Sidebar = ({ onCloseMobile }) => {
     <aside className="w-64 h-screen flex flex-col bg-white dark:bg-slate-950 border-r border-slate-200/80 dark:border-slate-800 select-none">
       {/* Brand Header */}
       <div className="h-16 px-5 flex items-center justify-between border-b border-slate-200/60 dark:border-slate-800">
-        <Link href="/app/command-center" onClick={onCloseMobile} className="flex items-center gap-2.5 group">
+        <Link href="/app/dashboard" onClick={onCloseMobile} className="flex items-center gap-2.5 group">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-700 via-blue-600 to-indigo-500 text-white flex items-center justify-center shadow-md shadow-blue-600/25 group-hover:scale-105 transition-transform">
             <ShieldCheck className="w-5 h-5 text-blue-300" />
           </div>

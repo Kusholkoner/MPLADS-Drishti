@@ -9,6 +9,7 @@ from config import (
     RISK_THRESHOLD_MODERATE,
     RISK_DIMENSION_WEIGHTS,
     MULTI_SIGNAL_BONUS_MULTIPLIER,
+    MULTI_SIGNAL_SEVERE_THRESHOLD,
 )
 from models.schemas import CanonicalWorkProfile, AnomalySignal, RiskEvaluationResult, RiskBreakdown
 
@@ -40,7 +41,7 @@ class RiskFusionEngine:
                 weighted_contribution = sig.score_contribution * sig.confidence
                 dimension_max[dim] = max(dimension_max[dim], weighted_contribution)
             
-            if sig.score_contribution >= 75.0 or sig.severity in ["critical", "high"]:
+            if sig.score_contribution >= MULTI_SIGNAL_SEVERE_THRESHOLD or sig.severity in ["critical", "high"]:
                 confirmatory_severe_signals += 1
 
         # Active dimensions sum

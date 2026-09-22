@@ -192,116 +192,113 @@ Audit Copilot Q&A (mod20)
 
 | Method | Route | Description |
 |--------|-------|-------------|
-| GET | `/api/health` | Health check |
-| POST | `/api/auth/login` | User login |
-| POST | `/api/auth/register` | User registration |
+| GET | `/api/health` | Comprehensive multi-tier health check (Supabase DB, Storage, AI Engine) |
+| POST | `/api/auth/register` | Register new institutional officer with Supabase Auth & PostgreSQL profile |
+| POST | `/api/auth/login` | Officer sign in, retrieves Supabase JWT session and RBAC profile |
+| POST | `/api/auth/logout` | Revoke active session |
+| POST | `/api/auth/forgot-password` | Request password reset email via Supabase |
+| GET | `/api/auth/me` | Fetch currently authenticated user session |
+| GET | `/api/auth/roles` | List all 7 institutional roles and permission matrices |
+| GET | `/api/auth/personas` | List 7 official synthetic test personas |
 | GET | `/api/projects` | List projects with filters |
 | GET | `/api/projects/:id` | Project detail |
-| POST | `/api/projects` | Create project |
-| PUT | `/api/projects/:id` | Update project |
-| GET | `/api/evidence` | List evidence |
-| POST | `/api/evidence` | Upload evidence |
-| GET | `/api/investigations` | List investigations |
-| POST | `/api/investigations` | Create investigation |
-| POST | `/api/copilot/query` | AI Copilot Q&A |
-| GET | `/api/analytics/summary` | Analytics summary |
-| GET | `/api/datasets` | List datasets |
-| POST | `/api/datasets/ingest` | Ingest dataset |
-| POST | `/api/ai/analyze` | Full AI analysis pipeline |
-| POST | `/api/ai/risk` | Risk score for project |
-| POST | `/api/ai/generate-dossier` | Generate audit dossier |
-| POST | `/api/ai/copilot` | AI copilot (streaming) |
-| GET | `/api/ai/pipeline-status` | AI pipeline health |
-| POST | `/api/ai/analyze-work` | Analyze work order |
-| POST | `/api/ai/semantic-similarity` | Compare two texts |
-| POST | `/api/ai/feedback/disposition` | Submit feedback |
+| GET | `/api/evidence` | List evidence records |
+| POST | `/api/evidence` | Upload photographic or document evidence binary |
+| GET | `/api/investigations` | List investigation cases |
+| POST | `/api/investigations` | Create new vigilance case file |
+| POST | `/api/copilot/query` | AI Copilot Q&A grounded with Gemini 2.0 Flash & statutory RAG |
+| GET | `/api/analytics/national` | National aggregate metrics |
+| GET | `/api/analytics/states` | State-level metrics |
+| GET | `/api/datasets` | List official datasets with schema introspection |
+| GET | `/api/datasets/summary/national` | National dataset summary |
+| POST | `/api/datasets/dynamic-ingest` | Multi-slot dynamic dataset ingestion |
+| POST | `/api/ai/proposal-check` | Proposal eligibility & cost benchmark audit |
+| POST | `/api/ai/duplicate-check` | Semantic and geospatial duplicate work detector |
+| POST | `/api/ai/vision-verify` | Image dHash perceptual comparison & forensic verification |
+| POST | `/api/ai/financial-physical-divergence` | Physical-financial progress divergence evaluation |
+| GET | `/api/ai/graph-network` | Vendor collusion graph network |
+| POST | `/api/ai/analyze-work` | Execute complete 21-module AI surveillance pipeline |
+| POST | `/api/ai/semantic-similarity` | Sentence-BERT semantic text similarity |
+| POST | `/api/ai/feedback/disposition` | Active learning auditor disposition feedback |
 
 ### AI Engine (FastAPI) — Port 8000
 
 | Method | Route | Description |
 |--------|-------|-------------|
-| GET | `/` | Welcome + version |
-| GET | `/health` | AI engine health |
-| POST | `/api/v1/analyze` | Full 21-module pipeline |
-| POST | `/api/v1/risk` | Risk score calculation |
-| POST | `/api/v1/generate-dossier` | Dossier generation |
-| POST | `/api/v1/copilot` | Copilot Q&A |
-| GET | `/api/v1/pipeline-status` | Module status |
-| POST | `/api/v1/analyze-work` | Work analysis |
-| POST | `/api/v1/semantic-similarity` | Text similarity |
-| POST | `/api/v1/feedback/disposition` | Feedback submission |
+| GET | `/` | Welcome banner, version, and active modules |
+| GET | `/health` | Live health check (21 modules status, Gemini status) |
+| GET | `/api/v1/health` | Canonical v1 health check endpoint |
+| GET | `/api/v1/datasets` | List 12 cloud datasets catalog |
+| POST | `/api/v1/analyze-work` | Run full 21-module AI surveillance pipeline |
+| POST | `/api/v1/semantic/similarity` | 384-dimensional dense semantic similarity (Sentence-BERT) |
+| POST | `/api/v1/semantic/rules-search` | RAG vector search over official MoSPI statutory rules |
+| POST | `/api/v1/financial/isolation-forest` | 100-tree IsolationForest anomaly detection |
+| POST | `/api/v1/vision/dhash-compare` | 64-bit difference hash (dHash) image verification |
+| POST | `/api/v1/forensics/document-tamper-check` | Error Level Analysis (ELA) forensic tamper detection |
+| POST | `/api/v1/copilot/query` | Gemini 2.0 Flash statutory grounded Audit Copilot |
+| POST | `/api/v1/copilot/stream` | Server-Sent Events (SSE) streaming copilot |
+| GET | `/api/v1/dossier/{work_id}` | Generate audit dossier & SHA-256 evidence card |
+| GET | `/api/v1/vendor-graph/{district}` | NetworkX bipartite vendor relationship graph |
+| POST | `/api/v1/feedback/disposition` | Active learning feedback loop |
 
 ---
 
-## 6. Development Setup
+## 6. How to Run the Project
 
-### Prerequisites
-- **Node.js** v18+ & npm v9+
-- **Python** 3.9+
-- **Supabase** account (or use local JSON fallback)
+### Quick Start (Run All Services Concurrently)
 
-### Installation
-
-#### 1. Clone & Install Dependencies
-
+In the repository root:
 ```bash
-# Install frontend dependencies
-cd frontend
-npm install
-
-# Install backend dependencies
-cd ../backend
-npm install
-
-# Install AI engine dependencies
-cd ../ai-engine
-pip install -r requirements.txt
-# Optional enhanced ML packages:
-pip install sentence-transformers scikit-learn httpx
+npm run dev:all   #<--------------------------ise hi run karo ;)
+# or: npm run dev
 ```
+This automatically boots:
+1. **AI Engine** on `http://localhost:8000`
+2. **Express Backend** on `http://localhost:5000`
+3. **Next.js Frontend** on `http://localhost:3000`
 
-#### 2. Environment Configuration
+---
 
-**Frontend** (`frontend/.env`):
-```env
-NEXT_PUBLIC_API_URL=http://localhost:5000/api
-NEXT_PUBLIC_LOCAL_API_URL=http://localhost:5000/api
-NEXT_PUBLIC_AI_ENGINE_URL=http://localhost:8000
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_xxxxx
-```
+### Step-by-Step Manual Start (Individual Terminals)
 
-**Backend** (`backend/.env`):
-```env
-PORT=5000
-NODE_ENV=development
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_ANON_KEY=your_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
-AI_ENGINE_URL=http://localhost:8000
-FRONTEND_URL=http://localhost:3000
-GEMINI_API_KEY=your_gemini_api_key
-JWT_SECRET=your_jwt_secret_here
-```
+If you prefer to run services in separate terminal windows:
 
-#### 3. Start All Services
-
+#### Terminal 1 — Python AI Engine (FastAPI)
 ```bash
-# Terminal 1 — AI Engine
-cd ai-engine
-uvicorn api:app --reload --port 8000
+# From repository root
+.venv\Scripts\python ai-engine/api.py
+```
+> Server starts on `http://localhost:8000`. Verify by opening `http://localhost:8000/health`.
 
-# Terminal 2 — Backend
-cd backend
-node server.js
-# or: npm start
+#### Terminal 2 — Node.js Express Backend
+```bash
+# From repository root
+node backend/server.js
+```
+> Server starts on `http://localhost:5000`. Supabase connects automatically. Verify via `http://localhost:5000/api/health`.
 
-# Terminal 3 — Frontend
+#### Terminal 3 — Next.js 16 Frontend
+```bash
+# From repository root
 cd frontend
 npm run dev
 ```
+> Frontend compiles with Turbopack and starts on `http://localhost:3000`.
 
-Then open: **http://localhost:3000**
+---
+
+### Application Access Points
+
+| Page / Service | URL | Purpose |
+|----------------|-----|---------|
+| **Institutional Dashboard** | [http://localhost:3000/app/dashboard](http://localhost:3000/app/dashboard) | Main landing overview, live system health, AI pipeline monitor |
+| **Command Center** | [http://localhost:3000/app/command-center](http://localhost:3000/app/command-center) | High-density surveillance and work stream analytics |
+| **Login / Register Portal** | [http://localhost:3000/login](http://localhost:3000/login) | Authenticate with Supabase or 1-click evaluation personas |
+| **Master Projects** | [http://localhost:3000/app/projects](http://localhost:3000/app/projects) | Browse, inspect, and filter MPLADS works |
+| **Risk Intelligence** | [http://localhost:3000/app/risk](http://localhost:3000/app/risk) | Financial anomalies, duplicate works, image verification |
+| **AI Audit Copilot** | [http://localhost:3000/app/copilot](http://localhost:3000/app/copilot) | Grounded AI consultation powered by Gemini 2.0 Flash |
+| **Backend Health** | [http://localhost:5000/api/health](http://localhost:5000/api/health) | Live latency and database diagnostics |
+| **AI Engine Health** | [http://localhost:8000/health](http://localhost:8000/health) | AI microservice status and module manifest |
 
 ---
 
@@ -387,6 +384,34 @@ npm run build
 4. **Risk Score Convention:** `composite_risk_score` is intentionally reversed (100 = safe, 0 = critical). This is by design to allow direct use as a "compliance score" while treating low values as alerts.
 
 5. **Streaming Copilot:** The `/api/v1/copilot` AI engine endpoint supports Server-Sent Events (SSE) streaming. The frontend uses `queryCopilot()` in `lib/api/index.js` for chunked streaming responses.
+
+---
+
+## 11. Deep Feature Audit & Implementation Status Matrix
+
+All features have been systematically audited across `frontend/`, `backend/`, and `ai-engine/`:
+
+| Module / Feature | Status | Details & Implementation Notes |
+|------------------|:------:|--------------------------------|
+| **Supabase Authentication** | ✅ **Active** | Full email/password registration and login with Supabase Auth, persistent JWT sessions, and profile synchronization with the PostgreSQL `profiles` table. |
+| **RBAC Matrix (7 Roles)** | ✅ **Active** | Role-based route protection and persona switching (`mospi_officer`, `state_nodal_authority`, `mp`, `implementing_agency`, `investigator`, `field_verification_officer`, `system_admin`). |
+| **Institutional Dashboard** | ✅ **Active** | Located at `/app/dashboard`. Features live health probes for all tiers, quick metrics, quick actions, and 21-module AI surveillance pipeline monitor. |
+| **National Command Center** | ✅ **Active** | Located at `/app/command-center`. Real-time multi-source work streams, risk donut chart, priority inspection queue, and district filters. |
+| **Master Projects Directory** | ✅ **Active** | Located at `/app/projects`. Multi-filter search, CSV export, single work inspection brief (`/app/projects/[...projectId]`). |
+| **Risk Intelligence Suite** | ✅ **Active** | Located at `/app/risk`. Sub-pages for financial velocity (`/risk/financial`), image dHash (`/risk/visual`), duplicates (`/risk/duplicates`), document OCR (`/risk/documents`), and timeline SLA (`/risk/timeline`). |
+| **Vendor Collusion GNN** | ✅ **Active** | Located at `/app/risk/vendor-graph`. Powered by NetworkX bipartite graph intelligence from Python AI Engine (`MOD-10` & `MOD-15`). |
+| **Attack Simulator** | ✅ **Active** | Located at `/app/risk/predictive`. Multi-vector stress testing and fraud pattern synthesis. |
+| **Vigilance Investigations** | ✅ **Active** | Located at `/app/investigations`. Case file management, SHA-256 evidence card generation, and audit notes. |
+| **Evidence Repository** | ✅ **Active** | Located at `/app/evidence`. File upload with 25MB ceiling, geotag validation, and SHA-256 integrity hashing. |
+| **AI Audit Copilot** | ✅ **Active** | Located at `/app/copilot`. Powered by Google Gemini 2.0 Flash (`MOD-20`) grounded in GFR 2017 & MPLADS Guidelines 2023 with SSE streaming. |
+| **e-SAKSHI Ingestion Hub** | ✅ **Active** | Located at `/app/data`. 12 official national datasets, multi-slot dynamic ingestion, and local streaming fallback engine. |
+| **National & State Analytics** | ✅ **Active** | Located at `/app/analytics`. GeoJSON map rendering, state-by-state drilldown (`/app/analytics/states/[state]`), and spending velocity curves. |
+| **Layout Similarity Studio** | ✅ **Active** | Located at `/app/risk/documents/compare`. Digital forensics, ELA tamper detection, and template match score. |
+| **21-Module AI Pipeline** | ✅ **Active** | Complete suite in `ai-engine/modules/`. 31 out of 31 unit tests passing (`ai-engine/tests`). |
+
+### Ideal Future Enhancements (Post-SIH Prototype)
+- **Production SMS / Aadhaar OTP**: For production field inspections, integrate Gov.in CDAC SMS gateway.
+- **Drone / Satellite Multispectral Feeds**: Direct ingestion of ISRO Bhuvan satellite polygons into `MOD-14`.
 
 ---
 
